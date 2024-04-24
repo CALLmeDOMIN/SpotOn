@@ -13,5 +13,28 @@ app.add_middleware(
 
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+def read_root():  # mock
+    res = {
+        "results": [
+            {
+                "id": 654959,
+                "title": "Pasta With Tuna",
+                "image": "https://img.spoonacular.com/recipes/654959-312x231.jpg",
+                "imageType": "jpg",
+                "nutrition": {
+                    "nutrients": [
+                        {
+                            "name": "Fat",
+                            "amount": 10.3185,
+                            "unit": "g"
+                        }
+                    ]
+                }
+            }
+        ],
+        "offset": 0,
+        "number": 1,
+        "totalResults": 133
+    }
+
+    return res.get("results")
