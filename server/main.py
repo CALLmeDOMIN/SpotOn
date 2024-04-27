@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import requests
 
 app = FastAPI()
 
@@ -12,29 +14,19 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def read_root():  # mock
-    res = {
-        "results": [
-            {
-                "id": 654959,
-                "title": "Pasta With Tuna",
-                "image": "https://img.spoonacular.com/recipes/654959-312x231.jpg",
-                "imageType": "jpg",
-                "nutrition": {
-                    "nutrients": [
-                        {
-                            "name": "Fat",
-                            "amount": 10.3185,
-                            "unit": "g"
-                        }
-                    ]
-                }
+@app.get("/recipes")
+async def get_recipes(ingridients: str, numberofRecipes: int):
+    external_api_url = "https://api.spoonacular.com/recipes/findByIngredients"
+    try:
+        response = requests.get(
+            external_api_url,
+            params={
+                "ingredients": ingridients,
+                "number": numberofRecipes,
+                "apiKey": "YOUR_API"
             }
-        ],
-        "offset": 0,
-        "number": 1,
-        "totalResults": 133
-    }
-
-    return res.get("results")
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        raise HTTPException(status_code=400, detail=str(e))

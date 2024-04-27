@@ -9,8 +9,10 @@ export const Route = createFileRoute("/recipes")({
   component: () => <Recipes />,
 });
 
-const fetchData = async () => {
-  const res = await axios.get("/api");
+const fetchData = async (ingridients: string, numberOfRecipes: number) => {
+  const res = await axios.get("/api/recipes", {
+    params: { ingridients, numberOfRecipes },
+  });
   return res.data;
 };
 
@@ -19,7 +21,7 @@ const Recipes = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["data"],
-    queryFn: fetchData,
+    queryFn: () => fetchData(ingridients, numberOfRecipes),
   });
 
   if (isLoading) {
