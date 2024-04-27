@@ -13,41 +13,55 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Link } from "@tanstack/react-router";
 import { RecipesSearch } from "@/lib/types";
+import { useNavigate } from "@tanstack/react-router";
 
 const formSchema = z.object({
-  ingridients: z.string().min(1),
-  numberOfRecipes: z.number().int().positive(),
+  ingredients: z.string().min(1, { message: "Ingredients are required" }),
+  numberOfRecipes: z.number().positive().max(10, {
+    message: "Max number of recipes is 10",
+  }),
 });
 
 const RecipesForm = ({
   className,
   defaultValues,
 }: {
-  className: string;
+  className?: string;
   defaultValues?: RecipesSearch;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ingridients: defaultValues?.ingridients || "",
+      ingredients: defaultValues?.ingredients || "",
       numberOfRecipes: defaultValues?.numberOfRecipes || 1,
     },
   });
 
+  const navigate = useNavigate();
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    navigate({
+      to: "/recipes",
+      search: {
+        ingredients: values.ingredients,
+        numberOfRecipes: values.numberOfRecipes,
+      },
+    });
+  };
+
   return (
     <div className={className}>
       <Form {...form}>
-        <form className="space-y-8">
+        <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name="ingridients"
+            name="ingredients"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ingridients</FormLabel>
+                <FormLabel>Ingredients</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your typical Ingridients" {...field} />
+                  <Input placeholder="Your typical Ingredients" {...field} />
                 </FormControl>
                 <FormDescription>
                   Input what you got in your fridge.
@@ -63,25 +77,24 @@ const RecipesForm = ({
               <FormItem>
                 <FormLabel>Number of Recipes</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    {...form.register("numberOfRecipes", {
+                      valueAsNumber: true,
+                    })}
+                  />
                 </FormControl>
                 <FormDescription>
-                  How many recipes do you want to generate?
+                  Amount of recipes you want to see.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Link
-            to="/recipes"
-            search={{
-              ingridients: form.getValues("ingridients"),
-              numberOfRecipes: form.getValues("numberOfRecipes"),
-            }}
-            className="flex justify-center"
-          >
+          <div className="flex justify-center">
             <Button type="submit">Submit</Button>
-          </Link>
+          </div>
         </form>
       </Form>
     </div>
