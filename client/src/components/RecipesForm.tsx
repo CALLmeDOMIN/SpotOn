@@ -31,8 +31,8 @@ const RecipesForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ingridients: "",
-      numberOfRecipes: 1,
+      ingridients: defaultValues?.ingridients || "",
+      numberOfRecipes: defaultValues?.numberOfRecipes || 1,
     },
   });
 
@@ -47,11 +47,7 @@ const RecipesForm = ({
               <FormItem>
                 <FormLabel>Ingridients</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Your typical Ingridients"
-                    {...field}
-                    defaultValue={defaultValues?.ingridients}
-                  />
+                  <Input placeholder="Your typical Ingridients" {...field} />
                 </FormControl>
                 <FormDescription>
                   Input what you got in your fridge.
@@ -67,11 +63,7 @@ const RecipesForm = ({
               <FormItem>
                 <FormLabel>Number of Recipes</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    defaultValue={defaultValues?.numberOfRecipes}
-                  />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormDescription>
                   How many recipes do you want to generate?

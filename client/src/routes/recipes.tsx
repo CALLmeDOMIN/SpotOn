@@ -31,16 +31,21 @@ const Recipes = () => {
   }
 
   return (
-    <div className="flex h-full min-h-screen">
-      <RecipesForm
-        className="m-8 flex items-center"
-        defaultValues={{ ingridients, numberOfRecipes }}
-      />
-      {data &&
-        data.map((recipe: Recipe) => (
-          <RecipeTile key={recipe.id} recipe={recipe} />
-        ))}
-      ingridients: {ingridients}, numberOfRecipes: {numberOfRecipes}
+    <div className="grid min-h-screen grid-cols-5">
+      <div className="col-span-2 flex h-full items-center justify-center">
+        <RecipesForm
+          className="m-8 flex items-center"
+          defaultValues={{ ingridients, numberOfRecipes }}
+        />
+      </div>
+      <div className="col-span-3 mt-10 max-h-[calc(100vh_-_2.5rem)] overflow-auto">
+        <div className="flex w-3/4 flex-col space-y-4">
+          {data &&
+            data.map((recipe: Recipe) => (
+              <RecipeTile key={recipe.id} recipe={recipe} />
+            ))}
+        </div>
+      </div>
     </div>
   );
 };
