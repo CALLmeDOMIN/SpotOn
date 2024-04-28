@@ -8,7 +8,7 @@ import {
 } from "./ui/card";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { TriangleAlert } from "lucide-react";
+import { toast } from "sonner";
 
 const fetchNutrition = async (id: number) => {
   const res = await axios.get(`/api/recipes/${id}`);
@@ -56,7 +56,7 @@ const RecipeTile = ({ recipe }: { recipe: Recipe }) => {
               {isLoading ? (
                 <div className="flex h-4 w-8 animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700"></div>
               ) : isError ? (
-                <TriangleAlert className="text-orange-500" />
+                toast.error("Error fetching nutrition")
               ) : (
                 <p className="font-bold">{data?.carbohydrates}</p>
               )}
@@ -67,7 +67,7 @@ const RecipeTile = ({ recipe }: { recipe: Recipe }) => {
               {isLoading ? (
                 <div className="flex h-4 w-8 animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700"></div>
               ) : isError ? (
-                <TriangleAlert className="text-orange-500" />
+                toast.error("Error fetching nutrition")
               ) : (
                 <p className="font-bold">{data?.protein}</p>
               )}
@@ -78,7 +78,7 @@ const RecipeTile = ({ recipe }: { recipe: Recipe }) => {
               {isLoading ? (
                 <div className="flex h-4 w-8 animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700"></div>
               ) : isError ? (
-                <TriangleAlert className="text-orange-500" />
+                toast.error("Error fetching nutrition")
               ) : (
                 <p className="font-bold">{data?.calories}</p>
               )}

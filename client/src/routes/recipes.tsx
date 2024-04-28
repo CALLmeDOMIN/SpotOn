@@ -12,6 +12,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/recipes")({
   component: () => <Recipes />,
@@ -27,7 +28,7 @@ const fetchRecipes = async (ingredients: string, numberOfRecipes: number) => {
 const Recipes = () => {
   const { ingredients, numberOfRecipes }: RecipesSearch = Route.useSearch();
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["data"],
     queryFn: () => fetchRecipes(ingredients, numberOfRecipes),
     retry: 1,
@@ -56,7 +57,14 @@ const Recipes = () => {
               <RecipesFormLoading key={i} />
             ))
           ) : isError ? (
-            <h1>Error: {JSON.stringify(error.message)}</h1>
+            <>
+              {toast.error("Error fetching recipes")}
+              <h1>No recipes found</h1>
+              <p>
+                Might be caused by using all of the API points. If that's the
+                case - come back tommorow
+              </p>
+            </>
           ) : data?.length !== 0 ? (
             data.map((recipe: Recipe) => (
               <RecipeTile key={recipe.id} recipe={recipe} />
