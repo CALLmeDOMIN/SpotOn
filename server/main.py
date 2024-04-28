@@ -13,5 +13,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app.include_router(recipes.router, prefix="/recipes")
+app.include_router(recipes.router, prefix="")
