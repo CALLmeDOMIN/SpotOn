@@ -17,7 +17,12 @@ import { RecipesSearch } from "@/lib/types";
 import { useNavigate } from "@tanstack/react-router";
 
 const formSchema = z.object({
-  ingredients: z.string().min(1, { message: "Ingredients are required" }),
+  ingredients: z
+    .string()
+    .min(1, { message: "Ingredients are required" })
+    .refine((value) => /^(\w+)(,\w+)*$/.test(value), {
+      message: "Ingredients should be separated by a comma without spaces",
+    }),
   numberOfRecipes: z.number().positive().max(10, {
     message: "Max number of recipes is 10",
   }),
@@ -61,10 +66,14 @@ const RecipesForm = ({
               <FormItem>
                 <FormLabel>Ingredients</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your typical Ingredients" {...field} />
+                  <Input
+                    placeholder="Your typical Ingredients"
+                    {...field}
+                    className="w-80 md:w-96"
+                  />
                 </FormControl>
                 <FormDescription>
-                  Input what you got in your fridge.
+                  Input what you have in your fridge.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
