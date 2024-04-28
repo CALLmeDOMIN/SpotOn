@@ -11,7 +11,6 @@ import axios from "axios";
 import { TriangleAlert } from "lucide-react";
 
 const fetchNutrition = async (id: number) => {
-  id = 649985;
   const res = await axios.get(`/api/recipes/${id}`);
   return res.data;
 };
